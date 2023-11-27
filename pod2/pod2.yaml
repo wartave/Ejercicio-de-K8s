@@ -6,6 +6,7 @@ spec:
   containers:
     - name: pod2
       image: pod2-image:latest
+      imagePullPolicy: Never
       ports:
         - containerPort: 3001
       command: ["node"]
@@ -17,4 +18,17 @@ spec:
         requests:
           cpu: "0.5"
           memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pod2-service
+spec:
+  selector:
+    app: pod2
+  ports:
+    - name: http
+      port: 81
+      targetPort: 3001
+  type: LoadBalancer
 
