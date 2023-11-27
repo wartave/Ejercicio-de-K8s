@@ -1,0 +1,26 @@
+kind create cluster
+kubectl config use-context kind-kind
+
+docker build -t pod1-image .
+docker build -t pod2-image .
+
+docker run -p 3000:3000 pod1-image
+docker run -p 3001:3001 pod2-image
+
+
+docker tag pod1-image wartave/pod1-image
+docker tag pod2-image wartave/pod2-image
+
+docker push wartave/pod1-image  
+docker push wartave/pod2-image  
+
+kubectl apply -f pod1/pod1.yaml
+kubectl apply -f pod1/service1.yaml
+
+kubectl apply -f pod2/pod2.yaml
+kubectl apply -f pod2/service2.yaml
+
+kubectl port-forward pod1 8080:3000
+kubectl port-forward pod2 8081:3001
+
+

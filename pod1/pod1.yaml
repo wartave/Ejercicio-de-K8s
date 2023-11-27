@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod1-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod1
+  template:
+    metadata:
+      labels:
+        app: pod1
+    spec:
+      containers:
+      - name: pod1
+        image: pod1-image:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: "1"
+            memory: "512Mi"
+          requests:
+            cpu: "0.5"
+            memory: "256Mi"
+        command: ["node"]
+        args: ["index.js"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pod1-service
+spec:
+  selector:
+    app: pod1
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: NodePort
+
+
